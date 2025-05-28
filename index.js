@@ -19,8 +19,7 @@ app.post('/webhook', async (req, res) => {
     if (!discordName) return res.status(400).send("discordName manquant");
 
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
-    const members = await guild.members.fetch();
-    const member = members.find(m => m.user.tag === discordName);
+   const member = await guild.members.fetch(discordName);
 
     if (!member) return res.status(404).send("Utilisateur non trouvé");
 
