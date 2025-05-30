@@ -9,22 +9,19 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
 });
 
-// Connexion du bot Discord
 client.once('ready', () => {
     console.log(`✅ Bot connecté en tant que ${client.user.tag}`);
 });
 
-// Middleware pour lire les données JSON
 app.use(express.json());
 
-// Route Webhook pour attribuer le rôle "citoyens"
 app.post('/webhook', async (req, res) => {
-    const discordId = req.body.discordName; // ⚠️ reste 'discordName' pour correspondre à Google Script
+    const discordId = req.body.discordId; // 👈 variable renommée
     if (!discordId) return res.status(400).send("❌ ID Discord manquant");
 
     try {
         const guild = await client.guilds.fetch(process.env.GUILD_ID);
-        const member = await guild.members.fetch(discordId);
+        const member = await guild.members.fetch(discordId); // 👈 fetch via ID
 
         if (!member) return res.status(404).send("❌ Utilisateur non trouvé");
 
@@ -40,10 +37,8 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-// Lancement du serveur Express
 app.listen(port, () => {
-    console.log(`🚀 Serveur d'écoute lancé sur le port ${port}`);
+    console.log(`🚀 Serveur lancé sur le port ${port}`);
 });
 
-// Connexion à Discord
 client.login(process.env.BOT_TOKEN);
